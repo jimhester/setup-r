@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "description": "R setup action",
-  "main": "lib/setup-go.js",
+  "main": "lib/setup-r.js",
   "scripts": {
     "build": "tsc",
     "format": "prettier --write **/*.ts",
