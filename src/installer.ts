@@ -66,7 +66,7 @@ async function acquireR(version: string): Promise<string> {
   }
 
   try {
-    await exec.exec("installer", ["-pkg", "/tmp/R-latest.pkg", "-target", "/"]);
+    await exec.exec("sudo", ["installer", "-pkg", "/tmp/R-latest.pkg", "-target", "/"]);
   } catch (error) {
     core.debug(error);
 
