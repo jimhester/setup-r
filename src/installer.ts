@@ -66,7 +66,13 @@ async function acquireR(version: string): Promise<string> {
   }
 
   try {
-    await exec.exec("sudo", ["installer", "-pkg", "/tmp/R-latest.pkg", "-target", "/"]);
+    await exec.exec("sudo", [
+      "installer",
+      "-pkg",
+      "/tmp/R-latest.pkg",
+      "-target",
+      "/"
+    ]);
   } catch (error) {
     core.debug(error);
 
@@ -90,7 +96,7 @@ async function acquireR(version: string): Promise<string> {
 
 async function setupRLibrary() {
   await fs.writeFile(
-    "~/.Rprofile",
+    path.join(process.env["HOME"] || "/Users", ".Rprofile"),
     'options(repos = "https://cloud.r-project.org")'
   );
 }
