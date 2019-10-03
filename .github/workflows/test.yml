@@ -9,7 +9,11 @@ on:
 jobs:
   test:
     runs-on: macOS-latest
+    matrix:
+      r: ['3.5.3', '3.6.1']
     steps:
-      - uses: jimhester/setup-r@releases/v1
-      - run: R -e 'options()'
+      - name: Setup R
+        uses: jimhester/setup-r@releases/v1
+        with:
+          r-version: ${{ matrix.r }}
       - run: R -e 'install.packages("remotes")'

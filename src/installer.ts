@@ -50,7 +50,7 @@ async function acquireR(version: string): Promise<string> {
   let downloadPath: string | null = null;
   try {
     downloadPath = await tc.downloadTool(downloadUrl);
-    io.mv(downloadPath, "/tmp/R-latest.pkg");
+    io.mv(downloadPath, "/tmp/R.pkg");
   } catch (error) {
     core.debug(error);
 
@@ -69,7 +69,7 @@ async function acquireR(version: string): Promise<string> {
     await exec.exec("sudo", [
       "installer",
       "-pkg",
-      "/tmp/R-latest.pkg",
+      "/tmp/R.pkg",
       "-target",
       "/"
     ]);
