@@ -1,4 +1,4 @@
-name: "Test typescript-action"
+name: "Test setup-r action"
 on:
   pull_request:
   push:
@@ -8,13 +8,8 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: macOS-latest
     steps:
-    - uses: actions/checkout@v1
-
-    - run: npm ci
-    - run: npm run build
-    - run: npm test
-    - uses: ./
-      with: 
-        milliseconds: 1000
+      - uses: jimhester/setup-r@v1
+      - run: R -e 'print("hi")'
+      - run: R -e 'install.packages("remotes")'
