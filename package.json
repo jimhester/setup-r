@@ -24,15 +24,15 @@
   "dependencies": {
     "@actions/core": "^1.0.0",
     "@actions/exec": "^1.0.0",
-    "@actions/tool-cache": "^1.0.0",
-    "husky": "^3.0.8",
-    "prettier": "^1.18.2"
+    "@actions/tool-cache": "^1.0.0"
   },
   "devDependencies": {
     "@types/jest": "^24.0.13",
     "@types/node": "^12.7.10",
+    "husky": "^3.0.8",
     "jest": "^24.9.0",
     "jest-circus": "^24.7.1",
+    "prettier": "^1.18.2",
     "ts-jest": "^24.0.2",
     "typescript": "^3.5.1"
   },
