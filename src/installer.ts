@@ -97,7 +97,9 @@ async function acquireR(version: string): Promise<string> {
 async function setupRLibrary() {
   let profilePath = path.join(process.env["HOME"] || "/Users", ".Rprofile");
   core.debug("R profile is at " + profilePath);
-  await fs.writeFile(profilePath, 'options(repos = "https://cloud.r-project.org")'
+  await fs.writeFile(
+    profilePath,
+    'options(repos = "https://cloud.r-project.org")'
   );
 }
 
