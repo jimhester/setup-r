@@ -99,6 +99,10 @@ function getFileName(version: string): string {
 }
 
 function getDownloadUrl(filename: string): string {
-  const extension: string = 'pkg';
-  return util.format("https://cloud.r-project.org/bin/macosx/%s.%s", filename, extension);
+  const extension: string = "pkg";
+  return util.format(
+    "https://cloud.r-project.org/bin/macosx/%s.%s",
+    filename,
+    extension
+  );
 }
