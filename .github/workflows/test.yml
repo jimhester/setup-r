@@ -10,6 +10,6 @@ jobs:
   test:
     runs-on: macOS-latest
     steps:
-      - uses: jimhester/setup-r@v1
+      - uses: jimhester/setup-r@releases/v1
       - run: R -e 'print("hi")'
       - run: R -e 'install.packages("remotes")'
