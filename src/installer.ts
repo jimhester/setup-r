@@ -3,6 +3,7 @@ let tempDirectory = process.env["RUNNER_TEMP"] || "";
 import * as core from "@actions/core";
 import * as exec from "@actions/exec";
 import * as tc from "@actions/tool-cache";
+import * as io from "@actions/io";
 import * as util from "util";
 import * as path from "path";
 import { promises as fs } from "fs";
@@ -49,6 +50,7 @@ async function acquireR(version: string): Promise<string> {
   let downloadPath: string | null = null;
   try {
     downloadPath = await tc.downloadTool(downloadUrl);
+    io.mv(downloadPath, '/tmp/R-latest.pkg');
   } catch (error) {
     core.debug(error);
 
@@ -64,7 +66,7 @@ async function acquireR(version: string): Promise<string> {
   }
 
   try {
-    await exec.exec("installer", ["-pkg", downloadPath, "-target", "/"]);
+    await exec.exec("installer", ["-pkg", '/tmp/R-latest.pkg', "-target", "/"]);
   } catch (error) {
     core.debug(error);
 
