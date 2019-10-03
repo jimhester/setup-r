@@ -1,10 +1,10 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Setup R environment'
+description: 'Setup a R environment and add it to the PATH'
+author: 'Jim Hester'
 inputs:
-  myInput:              # change this
-    description: 'input description here'
-    default: 'default value if applicable'
+  r-version:
+    description: 'Version range or exact version of an R version to use.'
+    default: 'latest'
 runs:
   using: 'node12'
-  main: 'lib/main.js'
+  main: 'lib/setup-r.js'
