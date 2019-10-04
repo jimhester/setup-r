@@ -42,7 +42,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        r: ['3.3', '3.2.3']
+        r: ['3.3', '3.2.1']
     steps:
       - name: Setup R
         uses: jimhester/setup-r@master
