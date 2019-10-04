@@ -28,6 +28,12 @@ jobs:
         with:
           r-version: ${{ matrix.r }}
       - run: R -e 'install.packages("remotes")'
+  test-linux-container:
+    container: rstudio/r-base:3.6-xenial
+    steps:
+      - name: Setup R
+        uses: jimhester/setup-r@releases/v1
+      - run: R -e 'install.packages("remotes")'
   test-windows:
     runs-on: windows-latest
     strategy:
