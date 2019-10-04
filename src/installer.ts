@@ -9,6 +9,7 @@ import * as path from "path";
 import { promises as fs } from "fs";
 
 const IS_WINDOWS = process.platform === "win32";
+const IS_MAC = process.platform === "darwin";
 
 if (!tempDirectory) {
   let baseLocation;
@@ -16,7 +17,7 @@ if (!tempDirectory) {
     // On windows use the USERPROFILE env variable
     baseLocation = process.env["USERPROFILE"] || "C:\\";
   } else {
-    if (process.platform === "darwin") {
+    if (IS_MAC) {
       baseLocation = "/Users";
     } else {
       baseLocation = "/home";
@@ -42,15 +43,84 @@ export async function getR(version: string) {
 }
 
 async function acquireR(version: string): Promise<string> {
+  if (IS_WINDOWS) {
+    return "";
+  } else if (IS_MAC) {
+    return acquireRMacOS(version);
+  } else {
+    return acquireRUbuntu(version);
+  }
+}
+
+async function acquireRUbuntu(version: string): Promise<string> {
   //
   // Download - a tool installer intimately knows how to get the tool (and construct urls)
   //
-  let fileName: string = getFileName(version);
-  let downloadUrl: string = getDownloadUrl(fileName);
+  let fileName: string = getFileNameUbuntu(version);
+  let downloadUrl: string = getDownloadUrlUbuntu(fileName);
   let downloadPath: string | null = null;
   try {
     downloadPath = await tc.downloadTool(downloadUrl);
-    io.mv(downloadPath, "/tmp/R.pkg");
+    io.mv(downloadPath, path.join("/tmp", fileName));
+  } catch (error) {
+    core.debug(error);
+
+    throw `Failed to download version ${version}: ${error}`;
+  }
+
+  //
+  // Extract
+  //
+  let extPath: string = tempDirectory;
+  if (!extPath) {
+    throw new Error("Temp directory not set");
+  }
+
+  try {
+    await exec.exec("sudo", ["apt-get", "install", "gdebi-core"]);
+    await exec.exec("sudo", ["gdbi", path.join("/tmp", fileName)]);
+  } catch (error) {
+    core.debug(error);
+
+    throw `Failed to install R: ${error}`;
+  }
+
+  //
+  // Add symlinks to the installed R to the path
+  //
+  //
+  try {
+    await exec.exec("sudo", [
+      "ln",
+      "-s",
+      path.join("/opt", "R", version, "bin", "R"),
+      "/usr/local/bin/R"
+    ]);
+    await exec.exec("sudo", [
+      "ln",
+      "-s",
+      path.join("/opt", "R", version, "bin", "Rscript"),
+      "/usr/local/bin/Rscript"
+    ]);
+  } catch (error) {
+    core.debug(error);
+
+    throw `Failed to setup symlinks to R: ${error}`;
+  }
+
+  return "/usr/local/bin";
+}
+
+async function acquireRMacOS(version: string): Promise<string> {
+  //
+  // Download - a tool installer intimately knows how to get the tool (and construct urls)
+  //
+  let fileName: string = getFileNameMacOS(version);
+  let downloadUrl: string = getDownloadUrlMacOS(fileName);
+  let downloadPath: string | null = null;
+  try {
+    downloadPath = await tc.downloadTool(downloadUrl);
+    io.mv(downloadPath, path.join("/tmp", fileName));
   } catch (error) {
     core.debug(error);
 
@@ -69,7 +139,7 @@ async function acquireR(version: string): Promise<string> {
     await exec.exec("sudo", [
       "installer",
       "-pkg",
-      "/tmp/R.pkg",
+      path.join("/tmp", fileName),
       "-target",
       "/"
     ]);
@@ -103,16 +173,20 @@ async function setupRLibrary() {
   );
 }
 
-function getFileName(version: string): string {
-  const filename: string = util.format("R-%s", version);
+function getFileNameMacOS(version: string): string {
+  const filename: string = util.format("R-%s.pkg", version);
   return filename;
 }
 
-function getDownloadUrl(filename: string): string {
-  const extension: string = "pkg";
-  return util.format(
-    "https://cloud.r-project.org/bin/macosx/%s.%s",
-    filename,
-    extension
-  );
+function getDownloadUrlMacOS(filename: string): string {
+  return util.format("https://cloud.r-project.org/bin/macosx/%s", filename);
+}
+
+function getFileNameUbuntu(version: string): string {
+  const filename: string = util.format("r-%s_1_amd64.deb", version);
+  return filename;
+}
+
+function getDownloadUrlUbuntu(filename: string): string {
+  return util.format("https://cdn.rstudio.com/r/ubuntu-1804/pkgs/%", filename);
 }

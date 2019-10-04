@@ -7,8 +7,19 @@ on:
       - 'releases/*'
 
 jobs:
-  test:
+  test-macOS:
     runs-on: macOS-latest
+    strategy:
+      matrix:
+        r: ['3.5.3', '3.6.1']
+    steps:
+      - name: Setup R
+        uses: jimhester/setup-r@releases/v1
+        with:
+          r-version: ${{ matrix.r }}
+      - run: R -e 'install.packages("remotes")'
+  test-linux:
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         r: ['3.5.3', '3.6.1']
