@@ -1,4 +1,4 @@
-name: "Test setup-r action"
+name: "setup-r"
 on:
   pull_request:
   push:
