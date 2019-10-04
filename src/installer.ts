@@ -45,7 +45,11 @@ async function acquireR(version: string) {
   } else if (IS_MAC) {
     acquireRMacOS(version);
   } else {
-    if ((await io.which("R", false)) == "") {
+    let returnCode = await exec.exec("R", ["--version"], {
+      ignoreReturnCode: true
+    });
+    core.debug(`returnCode: ${returnCode}`);
+    if (returnCode != 0) {
       // We only want to acquire R here if it
       // doesn't already exist (because you are running in a container that
       // already includes it)
