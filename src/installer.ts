@@ -37,6 +37,7 @@ export async function getR(version: string) {
     core.debug("R is cached under " + toolPath);
   }
 
+  setREnvironmentVariables();
   setupRLibrary();
 
   //core.addPath(toolPath);
@@ -184,6 +185,9 @@ async function setupRLibrary() {
     profilePath,
     'options(repos = "https://cloud.r-project.org")\n'
   );
+
+  // Make R_LIBS_USER
+  io.mkdirP(process.env["R_LIBS_USER"] || path.join(tempDirectory, "Library"));
 }
 
 function getFileNameMacOS(version: string): string {
@@ -202,4 +206,8 @@ function getFileNameUbuntu(version: string): string {
 
 function getDownloadUrlUbuntu(filename: string): string {
   return util.format("https://cdn.rstudio.com/r/ubuntu-1804/pkgs/%s", filename);
+}
+
+function setREnvironmentVariables() {
+  core.exportVariable("R_LIBS_USER", path.join(tempDirectory, "Library"));
 }
