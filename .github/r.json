@@ -1,0 +1,19 @@
+{
+    "problemMatcher": [
+        {
+            "owner": "R",
+            "pattern": [
+                {
+                    "regexp": "^(Error|Warning):\\s(.*))$",
+                    "severity": 1,
+                    "message": 2
+                },
+                {
+                    "regexp": "^(.*) [.][.][.] (ERROR|NOTE|WARNING)\\s+(.*)$",
+                    "severity": 2,
+                    "message": 3
+                }
+            ]
+        }
+    ]
+}

@@ -3,6 +3,7 @@
 This action sets up an R environment for use in actions by:
 
 - downloading and caching a version of R by version and adding to PATH
+- registering problem matchers for error output
 
 # Usage
 
