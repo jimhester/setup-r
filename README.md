@@ -15,7 +15,7 @@ steps:
 - uses: actions/checkout@master
 - uses: actions/setup-r@v1
   with:
-    r-version: '1.9.3' # The Go version to download (if necessary) and use.
+    r-version: '3.5.3' # The R version to download (if necessary) and use.
 - run: Rscript -e 'print("hello")'
 ```
 
@@ -27,13 +27,13 @@ jobs:
     strategy:
       matrix:
         R: [ '3.5.3', '3.6.1' ]
-    name: R ${{ matrix.go }} sample
+    name: R ${{ matrix.R }} sample
     steps:
       - uses: actions/checkout@master
       - name: Setup R
-        uses: actions/setup-r@v1
+        uses: actions/setup-R@v1
         with:
-          r-version: ${{ matrix.r }}
+          r-version: ${{ matrix.R }}
       - run: Rscript -e 'print("hello")'
 ```
 
