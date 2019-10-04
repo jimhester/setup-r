@@ -45,9 +45,13 @@ async function acquireR(version: string) {
   } else if (IS_MAC) {
     acquireRMacOS(version);
   } else {
-    let returnCode = await exec.exec("R", ["--version"], {
-      ignoreReturnCode: true
-    });
+    let returnCode = 1;
+    try {
+      returnCode = await exec.exec("R", ["--version"], {
+        ignoreReturnCode: true
+      });
+    } catch (e) {}
+
     core.debug(`returnCode: ${returnCode}`);
     if (returnCode != 0) {
       // We only want to acquire R here if it
