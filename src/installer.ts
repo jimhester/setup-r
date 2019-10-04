@@ -118,7 +118,6 @@ async function acquireRUbuntu(version: string): Promise<string> {
       "/usr/local/bin/R"
     ]);
     await exec.exec("sudo ln", [
-      "ln",
       "-s",
       path.join("/opt", "R", version, "bin", "Rscript"),
       "/usr/local/bin/Rscript"
