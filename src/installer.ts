@@ -78,9 +78,8 @@ async function acquireRUbuntu(version: string): Promise<string> {
   }
 
   try {
-    await exec.exec("sudo", ["apt-get", "install", "-y", "gdebi-core"]);
-    await exec.exec("sudo", [
-      "gdebi",
+    await exec.exec("sudo apt-get", ["install", "-y", "gdebi-core"]);
+    await exec.exec("sudo gdebi", [
       "--non-interactive",
       path.join("/tmp", fileName)
     ]);
@@ -95,13 +94,12 @@ async function acquireRUbuntu(version: string): Promise<string> {
   //
   //
   try {
-    await exec.exec("sudo", [
-      "ln",
+    await exec.exec("sudo ln", [
       "-s",
       path.join("/opt", "R", version, "bin", "R"),
       "/usr/local/bin/R"
     ]);
-    await exec.exec("sudo", [
+    await exec.exec("sudo ln", [
       "ln",
       "-s",
       path.join("/opt", "R", version, "bin", "Rscript"),
