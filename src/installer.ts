@@ -211,7 +211,7 @@ async function acquireRtools() {
       "--no-progress",
       "-f",
       "-s",
-      path.join(tempDirectory, fileName)
+      tempDirectory
     ]);
   } catch (error) {
     core.debug(error);
