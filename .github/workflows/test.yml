@@ -31,7 +31,7 @@ jobs:
   test-linux-container:
     strategy:
       matrix:
-        r: ['3.5', '3.6']
+        r: ['3.2', '3.6']
     runs-on: ubuntu-latest
     container: rstudio/r-base:${{ matrix.r }}-xenial
     steps:
@@ -42,7 +42,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        r: ['3.3', '3.2.1']
+        r: ['3.3', '3.4']
     steps:
       - name: Setup R
         uses: jimhester/setup-r@master
