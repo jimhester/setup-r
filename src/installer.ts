@@ -69,7 +69,7 @@ async function acquireRUbuntu(version: string): Promise<string> {
   }
 
   //
-  // Extract
+  // Install
   //
   let extPath: string = tempDirectory;
   if (!extPath) {
@@ -149,23 +149,32 @@ async function acquireRMacOS(version: string): Promise<string> {
     throw `Failed to install R: ${error}`;
   }
 
-  //if (osPlat == 'win32') {
-  //extPath = await tc.extractZip(downloadPath);
-  //} else {
-  //extPath = await tc.extractTar(downloadPath);
-  //}
-
-  //
-  // Install into the local tool cache - node extracts with a root folder that matches the fileName downloaded
-  //
-  //const toolRoot = path.join(extPath, 'r');
-  //version = normalizeVersion(version);
-  //return await tc.cacheDir(toolRoot, 'r', version);
   return "/";
 }
 
+async function acquireRWindows(version: string): Promise<string> {
+  try {
+    await exec.exec("choco", ["install", "r-project"]);
+  } catch (error) {
+    core.debug(error);
+
+    throw `Failed to install R: ${error}`;
+  }
+
+  return "";
+}
+
 async function setupRLibrary() {
-  let profilePath = path.join(process.env["HOME"] || "/Users", ".Rprofile");
+  let profilePath;
+  if (IS_WINDOWS) {
+    profilePath = path.join(
+      process.env["USERPROFILE"] || "C:\\",
+      "Documents",
+      ".Rprofile"
+    );
+  } else {
+    profilePath = path.join(process.env["HOME"] || "/Users", ".Rprofile");
+  }
   core.debug("R profile is at " + profilePath);
   await fs.writeFile(
     profilePath,
