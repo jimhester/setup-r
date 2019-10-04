@@ -4,7 +4,7 @@
             "owner": "R",
             "pattern": [
                 {
-                    "regexp": "^(Error|Warning):\\s(.*))$",
+                    "regexp": "^(Error|Warning):\\s(.*)$",
                     "severity": 1,
                     "message": 2
                 },
