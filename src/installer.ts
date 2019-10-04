@@ -136,7 +136,7 @@ async function acquireRMacOS(version: string): Promise<string> {
   // Download - a tool installer intimately knows how to get the tool (and construct urls)
   //
   let fileName: string = getFileNameMacOS(version);
-  let downloadUrl: string = getDownloadUrlMacOS(fileName);
+  let downloadUrl: string = getDownloadUrlMacOS(version);
   let downloadPath: string | null = null;
   try {
     downloadPath = await tc.downloadTool(downloadUrl);
