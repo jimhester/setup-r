@@ -32,24 +32,25 @@ export async function getR(version: string) {
   if (toolPath) {
     core.debug(`Tool found in cache ${toolPath}`);
   } else {
-    // download, extract, cache
-    toolPath = await acquireR(version);
-    core.debug("R is cached under " + toolPath);
+    await acquireR(version);
   }
 
   setREnvironmentVariables();
   setupRLibrary();
-
-  //core.addPath(toolPath);
 }
 
-async function acquireR(version: string): Promise<string> {
+async function acquireR(version: string) {
   if (IS_WINDOWS) {
-    return acquireRWindows(version);
+    acquireRWindows(version);
   } else if (IS_MAC) {
-    return acquireRMacOS(version);
+    acquireRMacOS(version);
   } else {
-    return acquireRUbuntu(version);
+    if ((await io.which("R", false)) == "") {
+      // We only want to acquire R here if it
+      // doesn't already exist (because you are running in a container that
+      // already includes it)
+      acquireRUbuntu(version);
+    }
   }
 }
 
