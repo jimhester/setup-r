@@ -39,12 +39,12 @@ export async function getR(version: string) {
 
   setupRLibrary();
 
-  core.addPath(toolPath);
+  //core.addPath(toolPath);
 }
 
 async function acquireR(version: string): Promise<string> {
   if (IS_WINDOWS) {
-    return "";
+    return acquireRWindows(version);
   } else if (IS_MAC) {
     return acquireRMacOS(version);
   } else {
