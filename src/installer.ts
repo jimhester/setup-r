@@ -258,8 +258,8 @@ function getFileNameMacOS(version: string): string {
 function getDownloadUrlMacOS(version: string): string {
   const filename: string = util.format("R-%s.pkg", version);
 
-  if (semver.lt(version, "3.4")) {
-    // older versions are in old
+  if (semver.lt(version, "3.4.0")) {
+    // older versions are in /old
     return util.format(
       "https://cloud.r-project.org/bin/macosx/old/%s",
       filename
