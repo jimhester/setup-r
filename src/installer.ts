@@ -48,7 +48,8 @@ async function acquireR(version: string) {
     let returnCode = 1;
     try {
       returnCode = await exec.exec("R", ["--version"], {
-        ignoreReturnCode: true
+        ignoreReturnCode: true,
+        silent: true
       });
     } catch (e) {}
 
