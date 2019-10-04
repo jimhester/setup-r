@@ -7,6 +7,8 @@ import * as io from "@actions/io";
 import * as util from "util";
 import * as path from "path";
 import { promises as fs } from "fs";
+import * as restm from "typed-rest-client/RestClient";
+import * as semver from "semver";
 
 const IS_WINDOWS = process.platform === "win32";
 const IS_MAC = process.platform === "darwin";
@@ -27,6 +29,11 @@ if (!tempDirectory) {
 }
 
 export async function getR(version: string) {
+  const selected = await determineVersion(version);
+  if (selected) {
+    version = selected;
+  }
+
   let toolPath = tc.find("R", version);
 
   if (toolPath) {
@@ -265,4 +272,78 @@ function getDownloadUrlUbuntu(filename: string): string {
 
 function setREnvironmentVariables() {
   core.exportVariable("R_LIBS_USER", path.join(tempDirectory, "Library"));
+}
+
+async function determineVersion(version: string): Promise<string> {
+  if (!version.endsWith(".x")) {
+    const versionPart = version.split(".");
+
+    if (versionPart[1] == null || versionPart[2] == null) {
+      return await getLatestVersion(version.concat(".x"));
+    } else {
+      return version;
+    }
+  }
+
+  return await getLatestVersion(version);
+}
+
+// This function is required to convert the version 1.10 to 1.10.0.
+// Because caching utility accept only sementic version,
+// which have patch number as well.
+function normalizeVersion(version: string): string {
+  const versionPart = version.split(".");
+  if (versionPart[1] == null) {
+    //append minor and patch version if not available
+    return version.concat(".0.0");
+  }
+
+  if (versionPart[2] == null) {
+    //append patch version if not available
+    return version.concat(".0");
+  }
+
+  return version;
+}
+
+interface IRRef {
+  version: string;
+}
+
+async function getAvailableVersions(): Promise<string[]> {
+  let rest: restm.RestClient = new restm.RestClient("setup-r");
+  let tags: IRRef[] =
+    (await rest.get<IRRef[]>("https://rversions.r-pkg.org/r-versions"))
+      .result || [];
+
+  return tags.map(tag => tag.version);
+}
+
+async function getPossibleVersions(version: string): Promise<string[]> {
+  const versions = await getAvailableVersions();
+  const possibleVersions = versions.filter(v => v.startsWith(version));
+
+  const versionMap = new Map();
+  possibleVersions.forEach(v => versionMap.set(normalizeVersion(v), v));
+
+  return Array.from(versionMap.keys())
+    .sort(semver.rcompare)
+    .map(v => versionMap.get(v));
+}
+
+async function getLatestVersion(version: string): Promise<string> {
+  // clean .x syntax: 1.10.x -> 1.10
+  const trimmedVersion = version.slice(0, version.length - 2);
+
+  const versions = await getPossibleVersions(trimmedVersion);
+
+  core.debug(`evaluating ${versions.length} versions`);
+
+  if (version.length === 0) {
+    throw new Error("unable to get latest version");
+  }
+
+  core.debug(`matched: ${versions[0]}`);
+
+  return versions[0];
 }

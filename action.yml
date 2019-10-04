@@ -4,7 +4,7 @@ author: 'Jim Hester'
 inputs:
   r-version:
     description: 'Version range or exact version of an R version to use.'
-    default: 'latest'
+    default: '3.x'
 runs:
   using: 'node12'
   main: 'lib/setup-r.js'

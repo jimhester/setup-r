@@ -10,7 +10,7 @@ jobs:
     runs-on: macOS-latest
     strategy:
       matrix:
-        r: ['3.5.3', '3.6.1']
+        r: ['3.5', '3.6.x']
     steps:
       - name: Setup R
         uses: jimhester/setup-r@master
@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        r: ['3.5.3', '3.6.1']
+        r: ['3.4', '3.x']
     steps:
       - name: Setup R
         uses: jimhester/setup-r@master
@@ -42,7 +42,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        r: ['3.5.3', '3.6.1']
+        r: ['3.3', '3.2.1']
     steps:
       - name: Setup R
         uses: jimhester/setup-r@master
