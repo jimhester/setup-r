@@ -48,7 +48,7 @@ export async function getR(version: string) {
 
 async function acquireR(version: string) {
   if (IS_WINDOWS) {
-    acquireRWindows(version);
+    await acquireRWindows(version);
     acquireRtools();
   } else if (IS_MAC) {
     acquireRMacOS(version);
