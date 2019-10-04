@@ -216,7 +216,6 @@ async function acquireRtools() {
       "rtools",
       "-y",
       "--no-progress",
-      "-i",
       "-s",
       tempDirectory
     ]);
