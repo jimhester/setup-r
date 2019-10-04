@@ -173,7 +173,7 @@ async function acquireRWindows(version: string): Promise<string> {
     throw `Failed to install R: ${error}`;
   }
 
-  core.addPath(`C:\Program Files\R\R-${version}\bin`);
+  core.addPath(`C:\\Program Files\\R\\R-${version}\\bin`);
 
   return "";
 }
