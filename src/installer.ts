@@ -188,5 +188,5 @@ function getFileNameUbuntu(version: string): string {
 }
 
 function getDownloadUrlUbuntu(filename: string): string {
-  return util.format("https://cdn.rstudio.com/r/ubuntu-1804/pkgs/%", filename);
+  return util.format("https://cdn.rstudio.com/r/ubuntu-1804/pkgs/%s", filename);
 }
