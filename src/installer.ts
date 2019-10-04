@@ -159,12 +159,21 @@ async function acquireRMacOS(version: string): Promise<string> {
 
 async function acquireRWindows(version: string): Promise<string> {
   try {
-    await exec.exec("choco", ["install", "r.project", "-y", "--no-progress"]);
+    await exec.exec("choco", [
+      "install",
+      "r.project",
+      "-y",
+      "--no-progress",
+      "--version",
+      version
+    ]);
   } catch (error) {
     core.debug(error);
 
     throw `Failed to install R: ${error}`;
   }
+
+  core.addPath(`C:\Program Files\R\R-${version}\bin`);
 
   return "";
 }
