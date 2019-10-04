@@ -192,7 +192,8 @@ async function setupRLibrary() {
   core.debug("R profile is at " + profilePath);
   await fs.writeFile(
     profilePath,
-    'options(repos = "https://cloud.r-project.org")\n'
+    `options(repos = '${process.env["CRAN"] ||
+      "https://cloud.r-project.org"}')\n`
   );
 
   // Make R_LIBS_USER
