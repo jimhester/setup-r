@@ -42,6 +42,7 @@ export async function getR(version: string) {
 async function acquireR(version: string) {
   if (IS_WINDOWS) {
     acquireRWindows(version);
+    acquireRtools();
   } else if (IS_MAC) {
     acquireRMacOS(version);
   } else {
@@ -184,6 +185,42 @@ async function acquireRWindows(version: string): Promise<string> {
   core.addPath(`C:\\Program Files\\R\\R-${version}\\bin`);
 
   return "";
+}
+
+async function acquireRtools() {
+  let fileName = "rtools.3.5.0.nupkg";
+  try {
+    let downloadPath = await tc.downloadTool(
+      util.format(
+        "https://github.com/hannesmuehleisen/choco-rtools/raw/master/%s",
+        fileName
+      )
+    );
+    io.mv(downloadPath, path.join(tempDirectory, fileName));
+  } catch (error) {
+    core.debug(error);
+
+    throw `Failed to download Rtools script ${fileName}: ${error}`;
+  }
+
+  try {
+    await exec.exec("choco", [
+      "install",
+      "rtools",
+      "-y",
+      "--no-progress",
+      "-f",
+      "-s",
+      path.join(tempDirectory, fileName)
+    ]);
+  } catch (error) {
+    core.debug(error);
+
+    throw `Failed to install Rtools: ${error}`;
+  }
+
+  core.addPath(`C:\\Rtools\\bin`);
+  core.addPath(`C:\\Rtools\\mingw_64\\bin`);
 }
 
 async function setupRLibrary() {
