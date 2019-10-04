@@ -77,8 +77,8 @@ async function acquireRUbuntu(version: string): Promise<string> {
   }
 
   try {
-    await exec.exec("sudo", ["apt-get", "install", "gdebi"]);
-    await exec.exec("sudo", ["gdbi", path.join("/tmp", fileName)]);
+    await exec.exec("sudo", ["apt-get", "install", "gdebi-core"]);
+    await exec.exec("sudo", ["gdebi", path.join("/tmp", fileName)]);
   } catch (error) {
     core.debug(error);
 
