@@ -256,6 +256,9 @@ function getFileNameMacOS(version: string): string {
 }
 
 function getDownloadUrlMacOS(version: string): string {
+  if (version == "devel") {
+    return "https://mac.r-project.org/el-capitan/R-devel/R-devel-el-capitan-signed.pkg";
+  }
   const filename: string = util.format("R-%s.pkg", version);
 
   if (semver.eq(version, "3.2.5")) {
