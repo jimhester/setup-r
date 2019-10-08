@@ -80,7 +80,7 @@ async function acquireRUbuntu(version: string): Promise<string> {
   let downloadPath: string | null = null;
   try {
     downloadPath = await tc.downloadTool(downloadUrl);
-    io.mv(downloadPath, path.join(tempDirectory, fileName));
+    await io.mv(downloadPath, path.join(tempDirectory, fileName));
   } catch (error) {
     core.debug(error);
 
@@ -140,7 +140,7 @@ async function acquireRMacOS(version: string): Promise<string> {
   let downloadPath: string | null = null;
   try {
     downloadPath = await tc.downloadTool(downloadUrl);
-    io.mv(downloadPath, path.join(tempDirectory, fileName));
+    await io.mv(downloadPath, path.join(tempDirectory, fileName));
   } catch (error) {
     core.debug(error);
 
