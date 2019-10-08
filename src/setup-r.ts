@@ -7,7 +7,9 @@ async function run() {
     core.debug(`started action`);
     let version = core.getInput("r-version");
     core.debug(`got version ${version}`);
-    await getR(version);
+    let rtoolsVersion = core.getInput("rtools-version");
+    core.debug(`got rtools-version ${rtoolsVersion}`);
+    await getR(version, rtoolsVersion);
 
     const matchersPath = path.join(__dirname, "..", ".github");
     console.log(`##[add-matcher]${path.join(matchersPath, "r.json")}`);

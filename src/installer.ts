@@ -28,7 +28,7 @@ if (!tempDirectory) {
   tempDirectory = path.join(baseLocation, "actions", "temp");
 }
 
-export async function getR(version: string) {
+export async function getR(version: string, rtoolsVersion: string) {
   const selected = await determineVersion(version);
   if (selected) {
     version = selected;
@@ -39,17 +39,17 @@ export async function getR(version: string) {
   if (toolPath) {
     core.debug(`Tool found in cache ${toolPath}`);
   } else {
-    await acquireR(version);
+    await acquireR(version, rtoolsVersion);
   }
 
   setREnvironmentVariables();
   setupRLibrary();
 }
 
-async function acquireR(version: string) {
+async function acquireR(version: string, rtoolsVersion: string) {
   if (IS_WINDOWS) {
     await acquireRWindows(version);
-    acquireRtools("35");
+    acquireRtools(rtoolsVersion);
   } else if (IS_MAC) {
     acquireRMacOS(version);
   } else {
