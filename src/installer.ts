@@ -80,7 +80,7 @@ async function acquireRUbuntu(version: string): Promise<string> {
   let downloadPath: string | null = null;
   try {
     downloadPath = await tc.downloadTool(downloadUrl);
-    io.mv(downloadPath, path.join("/tmp", fileName));
+    io.mv(downloadPath, path.join(tempDirectory, fileName));
   } catch (error) {
     core.debug(error);
 
@@ -99,7 +99,7 @@ async function acquireRUbuntu(version: string): Promise<string> {
     await exec.exec("sudo apt-get", ["install", "-y", "gdebi-core"]);
     await exec.exec("sudo gdebi", [
       "--non-interactive",
-      path.join("/tmp", fileName)
+      path.join(tempDirectory, fileName)
     ]);
   } catch (error) {
     core.debug(error);
@@ -140,7 +140,7 @@ async function acquireRMacOS(version: string): Promise<string> {
   let downloadPath: string | null = null;
   try {
     downloadPath = await tc.downloadTool(downloadUrl);
-    io.mv(downloadPath, path.join("/tmp", fileName));
+    io.mv(downloadPath, path.join(tempDirectory, fileName));
   } catch (error) {
     core.debug(error);
 
@@ -159,7 +159,7 @@ async function acquireRMacOS(version: string): Promise<string> {
     await exec.exec("sudo", [
       "installer",
       "-pkg",
-      path.join("/tmp", fileName),
+      path.join(tempDirectory, fileName),
       "-target",
       "/"
     ]);
@@ -173,14 +173,31 @@ async function acquireRMacOS(version: string): Promise<string> {
 }
 
 async function acquireRWindows(version: string): Promise<string> {
+  let fileName: string = getFileNameWindows(version);
+  let downloadUrl: string = getDownloadUrlWindows(fileName);
+  let downloadPath: string | null = null;
   try {
-    await exec.exec("choco", [
-      "install",
-      "r.project",
-      "-y",
-      "--no-progress",
-      "--version",
-      version
+    downloadPath = await tc.downloadTool(downloadUrl);
+    io.mv(downloadPath, path.join(tempDirectory, fileName));
+  } catch (error) {
+    core.debug(error);
+
+    throw `Failed to download version ${version}: ${error}`;
+  }
+
+  //
+  // Install
+  //
+  let extPath: string = tempDirectory;
+  if (!extPath) {
+    throw new Error("Temp directory not set");
+  }
+
+  try {
+    await exec.exec(path.join(tempDirectory, fileName), [
+      "/VERYSILENT",
+      "/SUPPRESSMSGBOXES",
+      "/DIR=C:\\R"
     ]);
   } catch (error) {
     core.debug(error);
@@ -259,7 +276,7 @@ function getDownloadUrlMacOS(version: string): string {
   if (version == "devel") {
     return "https://mac.r-project.org/el-capitan/R-devel/R-devel-el-capitan-signed.pkg";
   }
-  const filename: string = util.format("R-%s.pkg", version);
+  const filename: string = getFileNameMacOS(version);
 
   if (semver.eq(version, "3.2.5")) {
     // 3.2.5 is 'special', it is actually 3.2.4-revised...
@@ -283,6 +300,26 @@ function getFileNameUbuntu(version: string): string {
 
 function getDownloadUrlUbuntu(filename: string): string {
   return util.format("https://cdn.rstudio.com/r/ubuntu-1804/pkgs/%s", filename);
+}
+
+function getFileNameWindows(version: string): string {
+  const filename: string = util.format("R-%s-win.exe", version);
+  return filename;
+}
+
+function getDownloadUrlWindows(version: string): string {
+  if (version == "devel") {
+    return "https://cloud.r-project.org/bin/windows/base/R-devel-win.exe";
+  }
+
+  const filename: string = getFileNameWindows(version);
+
+  // old seems to have even the release version, so just use it conditionally
+  return util.format(
+    "https://cloud.r-project.org/bin/windows/base/old/%s/%s",
+    version,
+    filename
+  );
 }
 
 function setREnvironmentVariables() {
