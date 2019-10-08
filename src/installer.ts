@@ -49,7 +49,7 @@ export async function getR(version: string) {
 async function acquireR(version: string) {
   if (IS_WINDOWS) {
     await acquireRWindows(version);
-    acquireRtools();
+    acquireRtools("35");
   } else if (IS_MAC) {
     acquireRMacOS(version);
   } else {
@@ -205,35 +205,31 @@ async function acquireRWindows(version: string): Promise<string> {
     throw `Failed to install R: ${error}`;
   }
 
-  core.addPath(`C:\\Program Files\\R\\R-${version}\\bin`);
+  core.addPath(`C:\\R\\bin`);
 
   return "";
 }
 
-async function acquireRtools() {
-  let fileName = "rtools.3.5.0.nupkg";
+async function acquireRtools(version: string) {
+  let fileName: string = util.format("Rtools%s.exe", version);
+  let downloadUrl: string = util.format(
+    "http://cloud.r-project.org/bin/windows/Rtools/%s",
+    fileName
+  );
+  let downloadPath: string | null = null;
   try {
-    let downloadPath = await tc.downloadTool(
-      util.format(
-        "https://github.com/hannesmuehleisen/choco-rtools/raw/master/%s",
-        fileName
-      )
-    );
-    io.mv(downloadPath, path.join(tempDirectory, fileName));
+    downloadPath = await tc.downloadTool(downloadUrl);
+    await io.mv(downloadPath, path.join(tempDirectory, fileName));
   } catch (error) {
     core.debug(error);
 
-    throw `Failed to download Rtools script ${fileName}: ${error}`;
+    throw `Failed to download version ${version}: ${error}`;
   }
 
   try {
-    await exec.exec("choco", [
-      "install",
-      "rtools",
-      "-y",
-      "--no-progress",
-      "-s",
-      tempDirectory
+    await exec.exec(path.join(tempDirectory, fileName), [
+      "/VERYSILENT",
+      "/SUPPRESSMSGBOXES"
     ]);
   } catch (error) {
     core.debug(error);
