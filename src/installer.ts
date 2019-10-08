@@ -174,7 +174,7 @@ async function acquireRMacOS(version: string): Promise<string> {
 
 async function acquireRWindows(version: string): Promise<string> {
   let fileName: string = getFileNameWindows(version);
-  let downloadUrl: string = getDownloadUrlWindows(fileName);
+  let downloadUrl: string = getDownloadUrlWindows(version);
   let downloadPath: string | null = null;
   try {
     downloadPath = await tc.downloadTool(downloadUrl);
