@@ -4,9 +4,9 @@
             "owner": "R",
             "pattern": [
                 {
-                    "regexp": "^(.*) [.][.][.] (ERROR|NOTE|WARNING)\\s+(.*)$",
+                    "regexp": "^(.*) [.][.][.] (ERROR|NOTE|WARNING)$",
                     "severity": 2,
-                    "message": 3
+                    "message": 1
                 }
             ]
         }
