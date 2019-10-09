@@ -256,7 +256,7 @@ async function setupRLibrary() {
   await fs.writeFile(
     profilePath,
     `options(repos = '${process.env["CRAN"] ||
-      "https://cloud.r-project.org"}')\n`
+      "https://cloud.r-project.org"}', crayon.enabled = TRUE, Ncpus = 2)\n`
   );
 
   // Make R_LIBS_USER
