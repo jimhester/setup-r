@@ -4,7 +4,7 @@
             "owner": "testthat",
             "pattern": [
                 {
-                    "regexp": "^(.*):(\d+): (\w+): (\w+)$",
+                    "regexp": "^(.*):(\\d+): (\\w+): (\\w+)$",
                     "file": 1,
                     "line": 2,
                     "severity": 3,
