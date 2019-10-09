@@ -14,6 +14,7 @@ async function run() {
     const matchersPath = path.join(__dirname, "..", ".github");
     console.log(`##[add-matcher]${path.join(matchersPath, "rcmdcheck.json")}`);
     console.log(`##[add-matcher]${path.join(matchersPath, "testthat.json")}`);
+    console.log(`##[add-matcher]${path.join(matchersPath, "r.json")}`);
   } catch (error) {
     core.setFailed(error.message);
   }
