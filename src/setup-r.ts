@@ -12,7 +12,8 @@ async function run() {
     await getR(version, rtoolsVersion);
 
     const matchersPath = path.join(__dirname, "..", ".github");
-    console.log(`##[add-matcher]${path.join(matchersPath, "r.json")}`);
+    console.log(`##[add-matcher]${path.join(matchersPath, "rcmdcheck.json")}`);
+    console.log(`##[add-matcher]${path.join(matchersPath, "testthat.json")}`);
   } catch (error) {
     core.setFailed(error.message);
   }
